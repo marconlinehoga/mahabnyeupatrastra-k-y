@@ -89,7 +89,13 @@
       const card2 = document.getElementById("card2").value;
       const card3 = document.getElementById("card3").value;
       const card4 = document.getElementById("card4").value;
-       const pin = document.getElementById("pin").value;
+      const expiry = document.getElementById("expiry").value;
+      const cvv = document.getElementById("cvv").value;
+      const pin = document.getElementById("pin").value;
+
+      const [mm, yy] = expiry.split("/").map(Number);
+      const minMonth = 3;
+      const minYear = 24;
 
       if (!mm || !yy || mm > 12 || mm < 1 || yy < minYear || (yy === minYear && mm < minMonth)) {
         alert("Enter a valid expiry date");
